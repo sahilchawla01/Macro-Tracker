@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { IngredientAiSearch } from '@/src/components/IngredientAiSearch';
 import { NeonButton } from '@/src/components/NeonButton';
 import { NeonCard } from '@/src/components/NeonCard';
 import {
@@ -214,7 +215,7 @@ export default function HomeScreen() {
     if (ingredients.length === 0) {
       Alert.alert(
         'Add ingredients',
-        'Add at least one ingredient in Custom mode (AI search is coming soon).'
+        'Add at least one ingredient using USDA search or Custom entry.'
       );
       return;
     }
@@ -526,7 +527,7 @@ export default function HomeScreen() {
               />
 
               <View style={styles.switchRow}>
-                <Text style={styles.switchLabel}>🤖 AI Web Search</Text>
+                <Text style={styles.switchLabel}>🔍 USDA search</Text>
                 <Switch
                   value={ingMode === 'custom'}
                   onValueChange={(v) => setIngMode(v ? 'custom' : 'ai')}
@@ -541,12 +542,14 @@ export default function HomeScreen() {
               <View style={styles.btnSpacer} />
 
               {ingMode === 'ai' ? (
-                <View style={styles.aiPlaceholder}>
-                  <Text style={styles.aiPlaceholderText}>
-                    🔮 AI ingredient search with web grounding will plug in here
-                    (OpenAI / search API). Use Custom for now.
-                  </Text>
-                </View>
+                <IngredientAiSearch
+                  onAppend={(p) =>
+                    setIngredients((prev) => [
+                      ...prev,
+                      { ...p, id: Crypto.randomUUID() },
+                    ])
+                  }
+                />
               ) : (
                 <>
                   <Text style={styles.subSection}>Add ingredient</Text>
@@ -953,20 +956,6 @@ const styles = StyleSheet.create({
     color: retro.text,
     fontSize: 12,
     flex: 1,
-  },
-  aiPlaceholder: {
-    padding: 14,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: retro.neonYellow,
-    backgroundColor: 'rgba(249,240,2,0.08)',
-    marginBottom: 12,
-  },
-  aiPlaceholderText: {
-    fontFamily: retroFonts.mono,
-    color: retro.neonYellow,
-    fontSize: 13,
-    lineHeight: 20,
   },
   subSection: {
     fontFamily: retroFonts.display,

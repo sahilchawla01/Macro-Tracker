@@ -5,6 +5,7 @@ import {
   bmrMifflinStJeor,
   calorieTargetFromGoal,
   macroTargetsGrams,
+  scaleNutrientsFromPer100g,
   tdeeFromBmr,
   waterGoalMl,
 } from '@/src/nutrition/calculations';
@@ -300,12 +301,21 @@ export function scaleFromPer100g(
   f: number,
   grams: number
 ): { calories: number; protein_g: number; carb_g: number; fat_g: number } {
-  const factor = grams / 100;
+  const s = scaleNutrientsFromPer100g(
+    {
+      calories: cal,
+      protein_g: p,
+      carb_g: c,
+      fat_g: f,
+      fiber_g: 0,
+    },
+    grams
+  );
   return {
-    calories: Math.round(cal * factor * 10) / 10,
-    protein_g: Math.round(p * factor * 10) / 10,
-    carb_g: Math.round(c * factor * 10) / 10,
-    fat_g: Math.round(f * factor * 10) / 10,
+    calories: s.calories,
+    protein_g: s.protein_g,
+    carb_g: s.carb_g,
+    fat_g: s.fat_g,
   };
 }
 

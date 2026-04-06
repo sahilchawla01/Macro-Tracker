@@ -33,6 +33,25 @@ Convenience scripts:
 
 First launch runs onboarding; data lives in SQLite on the device.
 
+## USDA ingredient search (Add meal)
+
+Add Meal → **USDA search** queries [FoodData Central](https://fdc.nal.usda.gov/) (up to three results). Pick a food, set **grams**, then **Add ingredient**. **Custom** mode is still available for manual macros.
+
+1. Request a free API key: [FDC API key signup](https://fdc.nal.usda.gov/api-key-signup).
+2. Copy [`.env.example`](.env.example) to **`.env`** in the project root and set:
+
+   ```bash
+   EXPO_PUBLIC_USDA_API_KEY=your_key_here
+   ```
+
+3. Restart Expo (`npm start`). The key is **embedded in the client bundle** (anyone can extract it). For stricter control, use a small backend proxy later.
+
+**Limits:** USDA documents about **1,000 requests per hour per IP** for the Data API; use the Search button intentionally.
+
+**Web:** If the browser blocks requests to `api.nal.usda.gov` (CORS), USDA search may only work on **iOS/Android** until you add a proxy.
+
+**EAS builds:** Set `EXPO_PUBLIC_USDA_API_KEY` in [EAS environment variables](https://docs.expo.dev/eas/environment-variables/) for the build profile so `app.config.js` can pass it into `extra.usdaApiKey`.
+
 ## Test
 
 Unit tests use **Jest** (`jest-expo` preset). Nutrition math and repository helpers are covered under `src/**/*.test.ts`.
@@ -98,6 +117,7 @@ Regenerate after native or config/plugin changes; use `npx expo prebuild --platf
 - `src/db/` — SQLite schema, migrations, repository
 - `src/nutrition/` — BMR/TDEE/macros/water calculations
 - `src/components/` — UI (retro theme)
+- `src/services/` — USDA FoodData Central search helpers
 - `jest.config.js` — Jest / `jest-expo`
 
 ## License

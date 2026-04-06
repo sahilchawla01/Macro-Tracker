@@ -107,6 +107,29 @@ export function bmi(weightKg: number, heightCm: number): number {
   return Math.round((weightKg / (m * m)) * 10) / 10;
 }
 
+export type Per100gNutrients = {
+  calories: number;
+  protein_g: number;
+  carb_g: number;
+  fat_g: number;
+  fiber_g: number;
+};
+
+/** Scale USDA-style per-100 g values to a portion in grams (same rounding as food scaling in repo). */
+export function scaleNutrientsFromPer100g(
+  per100g: Per100gNutrients,
+  grams: number
+): Per100gNutrients {
+  const factor = grams / 100;
+  return {
+    calories: round1(per100g.calories * factor),
+    protein_g: round1(per100g.protein_g * factor),
+    carb_g: round1(per100g.carb_g * factor),
+    fat_g: round1(per100g.fat_g * factor),
+    fiber_g: round1(per100g.fiber_g * factor),
+  };
+}
+
 function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }

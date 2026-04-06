@@ -10,6 +10,7 @@ import {
   kgToLb,
   lbToKg,
   macroTargetsGrams,
+  scaleNutrientsFromPer100g,
   tdeeFromBmr,
   waterGoalMl,
 } from './calculations';
@@ -135,6 +136,25 @@ describe('kgToLb', () => {
 
   it('matches LB_PER_KG constant', () => {
     expect(kgToLb(1)).toBeCloseTo(LB_PER_KG, 5);
+  });
+});
+
+describe('scaleNutrientsFromPer100g', () => {
+  it('scales per-100g values to portion grams', () => {
+    const per100g = {
+      calories: 200,
+      protein_g: 10,
+      carb_g: 20,
+      fat_g: 9,
+      fiber_g: 4,
+    };
+    expect(scaleNutrientsFromPer100g(per100g, 100)).toEqual(per100g);
+    const half = scaleNutrientsFromPer100g(per100g, 50);
+    expect(half.calories).toBe(100);
+    expect(half.protein_g).toBe(5);
+    expect(half.carb_g).toBe(10);
+    expect(half.fat_g).toBe(4.5);
+    expect(half.fiber_g).toBe(2);
   });
 });
 
